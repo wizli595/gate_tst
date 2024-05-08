@@ -32,9 +32,17 @@
                                             <a href="{{ route('posts.show', $post->id) }}" class="bg-blue-500 hover:bg-blue-700  font-bold py-2 px-4 rounded">View</a>
                                         </td>
                                     @endcan
-                                    @cannot('view', $post)
-                                        <td class="border px-4 py-2">No Access</td>
-                                    @endcannot
+                                    {{-- @cannot('view', $post) --}}
+                                        <td class="border px-4 py-2">
+                                            <div>
+                                                <button class="bg-gray-500 hover:bg-red-700 font-bold py-2 px-4 rounded">
+                                                    <a href="{{ route('posts.comments.create', $post) }}" >
+                                                        Create Comment
+                                                    </a>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    {{-- @endcannot --}}
                                 </tr>
                             @endforeach
                         </tbody>

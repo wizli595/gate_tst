@@ -31,25 +31,34 @@
                     <div class="p-6 text-gray-900">
                         <h1 class="text-3xl font-bold">Comments</h1>
                         <div class="mt-4">
-                            <div>
-                                <button class="bg-gray-500 hover:bg-red-700 font-bold py-2 px-4 rounded">
-                                    {{-- <a href="{{ route('comments.create', ['post_id' => $post->id]) }}" >
-                                    </a> --}}
-                                    Create Comment
-                                </button>
-                            </div>
+                          
                             <table class="table-auto w-full">
                                 <thead>
                                     <tr>
                                         <th class="px-4 py-2">Content</th>
-                                        {{-- <th class="px-4 py-2">Actions</th> --}}
+                                        <th class="px-4 py-2">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($post->comments as $comment)
                                         <tr>
                                             <td class="border px-4 py-2">{{ $comment->content }}</td>
-                                           
+                                            @can(['update','delete'], $comment)
+                                                
+                                            <td class="border px-4 py-2">
+                                                <form action="{{ route('comments.update', [$post, $comment]) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <input type="text" name="content" class="form-control py-2 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent" value="{{ $comment->content }}">
+                                                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">update</button>
+                                                </form>
+                                    
+                                                <form action="{{ route('comments.destroy', [$post, $comment]) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                                                </form>
+                                            @endcan
                                         </tr>
                                     @endforeach
                                 </tbody>
