@@ -21,7 +21,7 @@ class PostPolicy
      */
     public function view(User $user, Post $post): bool
     {
-        return boolval($user->is_admin)  || $user->id === $post->user_id;
+        return $user->isAdmin() || $user->id === $post->user_id;
     }
 
     /**
@@ -37,7 +37,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return boolval($user->is_admin) || $user->id === $post->user_id;    
+        return $user->isAdmin() || $user->id === $post->user_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return boolval($user->is_admin);
+        return $user->isAdmin();
     }
 
     /**
@@ -53,7 +53,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post): bool
     {
-        return boolval($user->is_admin);
+        return $user->isAdmin();
     }
 
     /**
@@ -61,6 +61,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post): bool
     {
-        return boolval($user->is_admin);
+        return $user->isAdmin();
     }
 }
