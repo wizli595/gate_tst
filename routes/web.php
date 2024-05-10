@@ -30,6 +30,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::resource('posts', PostController::class);
     Route::resource('posts.comments', CommentController::class)->shallow()->only(['store', 'destroy', 'update','create']);
+    Route::get("notify",[PostController::class,'test']);
 });
 
 require __DIR__.'/auth.php';

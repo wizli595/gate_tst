@@ -16,21 +16,21 @@ class PostSeeder extends Seeder
         $users->each(function ($user) {
             $posts = \App\Models\Post::factory()->count(5)->make();
             $user->posts()->saveMany($posts);
-            $posts->each(function ($post) {
-                $comments = \App\Models\Comment::factory()->count(5)->make();
+            // $posts->each(function ($post) {
+            //     // $comments = \App\Models\Comment::factory()->count(5)->make();
 
-                $comments->each(function ($comment) use ($post) {
-                    $comment->user_id = $post->user_id;
-                });
+            //     // $comments->each(function ($comment) use ($post) {
+            //     //     $comment->user_id = $post->user_id;
+            //     // });
 
-                $post->comments()->saveMany($comments);
-                
-                $likes = \App\Models\Like::factory()->count(5)->make();
-                $likes->each(function ($like) use ($post) {
-                    $like->user_id = $post->user_id;
-                });
-                $post->likes()->saveMany($likes);
-            });
+            //     // $post->comments()->saveMany($comments);
+
+            //     // $likes = \App\Models\Like::factory()->count(5)->make();
+            //     // $likes->each(function ($like) use ($post) {
+            //     //     $like->user_id = $post->user_id;
+            //     // });
+            //     // $post->likes()->saveMany($likes);
+            // });
         });
     }
 }

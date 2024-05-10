@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostEvent;
 use App\Models\Post;
+use App\Models\User;
+use App\Notifications\TestNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class PostController extends Controller
 {
@@ -25,6 +30,7 @@ class PostController extends Controller
      */
     public function create()
     {
+
         return view('post.create');
     }
 
@@ -33,20 +39,31 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $data =[];
+
+        // Validate incoming request data
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
         ]);
-        // $validated['user_id'] = auth()->user()->id;
-        $data['title']=$validated['title'];
-        $data['content']=$validated['content'];
-        $data['user_id']=auth()->user()->id;
-        $post = Post::create($data);
-        return redirect()->route('posts.show', $post);
-        
-    }
 
+
+            $data = [
+                'title' => $validated['title'],
+                'content' => $validated['content'],
+                'user_id' => Auth::id(),
+            ];
+
+
+            $post = Post::create($data);
+            $post->save();
+            $e=new PostEvent($post);
+            // dd($e);
+            event($e);
+
+        return redirect()->route('posts.show', $post);
+
+
+    }
     /**
      * Display the specified resource.
      */
@@ -61,7 +78,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-       
+
         return view('post.edit', compact('post'));
     }
 
@@ -70,13 +87,15 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
         ]);
         $post->update($validated);
+        event(new PostEvent($post));
         return redirect()->route('posts.show', $post);
-        
+
     }
 
     /**
@@ -84,8 +103,13 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-       
+
         $post->delete();
+        event(new PostEvent($post));
         return redirect()->route('posts.index');
+    }
+    public function test(){
+        $users = User::all();
+        Notification::send($users, new TestNotification());
     }
 }
